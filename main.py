@@ -22,7 +22,6 @@ async def aes(ctx, *, arg):
                 #await ctx.send(line)
                 SAS = linecache.getline('KEYS.txt', index+1)
                 SOS = linecache.getline('FULL.txt', index+1)
-                #embedVar = discord.Embed(title="Search result", description=arg, color=0x00ff00)
                 embedVar = discord.Embed(color=0x6699CC)
                 embedVar.add_field(name="Game:", value=SOS, inline=False)
                 embedVar.add_field(name="AES key:", value="`"+SAS+"`", inline=False)
@@ -33,7 +32,7 @@ async def link(ctx):
     embedVar = discord.Embed(color=0x666699)
     embedVar.description = "Wow! Is that an **[invite link](https://discord.com/oauth2/authorize?client_id=924010993984622632&scope=applications.commands%20bot&permissions=8)**???"
     await ctx.send(embed=embedVar)
-
+    
 @bot.command()
 async def h(ctx):
     embedVar = discord.Embed(title="Help?", color=0x996699)
@@ -49,7 +48,6 @@ async def h(ctx):
 async def restart(ctx):
     await ctx.send("nah")
 
-
 @bot.command()
 async def status(ctx):
     lines = 0
@@ -60,30 +58,45 @@ async def status(ctx):
     embedVar.add_field(name="Keys: ", value=lines, inline=True)
     embedVar.set_footer(text='Version [Beta 2.4]')
     await ctx.send(embed=embedVar)
-#393833273488441345
 
 @bot.command()
 async def git(ctx):
     embedVar = discord.Embed(title="Sources", color=0x999999)
-    #embedVar.set_thumbnail(url="https://github.githubassets.com/images/modules/logos_page/Octocat.png")
     embedVar.description = "**[GIT](https://github.com/MarkTauber/DMT_bot)**"
-    embedVar.set_footer(text='FPSkiller#6474') #, icon_url="https://cdn.discordapp.com/avatars/393833273488441345/589019624907902b5e6e27d6955df53a.png"
+    embedVar.set_footer(text='FPSkiller#6474')
     await ctx.send(embed=embedVar)
 
 @bot.command()
+async def pa(ctx, chat, IDEW, *, answer):
+        if ctx.author.id == 393833273488441345:  #393833273488441345 is my user ID
+            user = await bot.fetch_user(user_id=chat)
+            await user.send("> Your report **[" + str(IDEW) + "]** has been answered\n\n" + str(answer))  
+        #else:
+       # await ctx.send("nah")
+
+@bot.command()
+async def ca(ctx, channel: discord.TextChannel, REPORTS, *, text):
+    if ctx.author.id == 393833273488441345:  #393833273488441345 is my user ID
+        emb= discord.Embed(title='Report ' + str(REPORTS) + " answered",description=f'{text}', timestamp=ctx.message.created_at, color=0xCC3300)
+        await channel.send(embed=emb)
+
+@bot.command()
 async def r(ctx, *, arg):
-    load1=discord.Embed(title='collecting data...    [  ' + str(random.randint(1, 25)) + '%   ]',color=0x009999)
-    load2=discord.Embed(title='Converting...         [  ' + str(random.randint(25, 50)) + '%  ]',color=0x009999)
-    load3=discord.Embed(title='Creating report...    [  ' + str(random.randint(50, 75)) + '%  ]',color=0x009999)
-    load4=discord.Embed(title='Sending to server...  [  ' + str(random.randint(75, 100)) + '%  ]',color=0x009999)
+    load1=discord.Embed(title='collecting data...    `[  ' + str(random.randint(1, 10)) + '%   ]`',color=0x009999)
+    load2=discord.Embed(title='Converting...         `[  ' + str(random.randint(10, 36)) + '%  ]`',color=0x009999)
+    load3=discord.Embed(title='Creating report...    `[  ' + str(random.randint(36, 83)) + '%  ]`',color=0x009999)
+    load4=discord.Embed(title='Sending to server...  `[  ' + str(random.randint(83, 100)) + '%  ]`',color=0x009999)
     complete=discord.Embed(title='Reported to creator!',color=0x0099CC)
     msg=await ctx.send(embed=load1)
     namos = ctx.author.name
+    sos = ctx.channel.id
+    ses = ctx.message.author.id
     datetimeString = str(datetime.datetime.now())
     await msg.edit(embed=load2)
     fullreport = "!!!REPORT!!!\nData: [" + datetimeString + "]\nName: [" + namos + "]"
     await msg.edit(embed=load3)
     textxs = "```" + arg + "```"
+    IDs = random.randint(1000000000, 9999999999)
     await msg.edit(embed=load4)
     print(fullreport)
     print('"' + arg + '"')
@@ -91,7 +104,12 @@ async def r(ctx, *, arg):
     complete.add_field(name="User", value=namos, inline=True)
     complete.add_field(name="Time", value=datetimeString, inline=True)
     complete.add_field(name="Message: ", value=textxs, inline=False)
-    await user.send('__**!!!NEW REORT!!!**__\n > **User:**   `' + namos + "`\n> **Time:**   `"+datetimeString +"`\nMessage:\n" + textxs)
+    complete.set_footer(text="ID_" + str(IDs) + "")
+    await user.send('__**!!!NEW REPORT!!!**__\n > **User:**   `' + namos + 
+    "`\n> **Time:**  `"+ datetimeString + 
+    "`\n\n> CHAT ID:       `" + str(sos) + 
+    "`\n> USER ID:        `" + str(ses) + "`" + 
+    "\n> REPORT ID:   `" + str(IDs) + "`\n\n" + textxs)
     await msg.edit(embed=complete)
     
 bot.run(TOKEN)
