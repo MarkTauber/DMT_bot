@@ -3,7 +3,6 @@ from discord.ext import commands
 import linecache
 import datetime
 import random
-
 TOKEN = ""
 
 bot = commands.Bot(command_prefix=('!'))
