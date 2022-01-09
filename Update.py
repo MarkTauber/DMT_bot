@@ -1,0 +1,51 @@
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+import time
+import codecs
+
+# START
+options = Options()
+options.add_argument("--headless")
+driver = webdriver.Firefox(executable_path="geckodriver.exe", options=options)
+driver.get("https://cs.rin.ru/forum/viewtopic.php?f=10&t=100672")
+print("waiting...")
+time.sleep(5)
+driver.find_element_by_xpath("/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[2]/div[1]/input").click()
+test_string = driver.find_element_by_xpath("/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[2]/div[2]/div/div/div[2]/div/ol").text
+f1 = open("text1.txt", 'w') 
+f1.write(test_string)
+driver.close()
+print("Looking for new keys...")
+lines = 0
+for line in open('text1.txt'):
+        lines += 1
+
+lines2 = 0
+for line in open('AES.txt'):
+        lines2 += 1
+
+if lines > lines2-1:
+
+    #f4 = open("AES.txt", 'w') 
+    #f5= open("text1.txt",'r')
+    BLOCKSIZE = 1048576 # or some other, desired size in bytes
+    with codecs.open('text1.txt', "r", "ANSI") as sourceFile:
+        with codecs.open('AES.txt', "w", "utf-8") as targetFile:
+            while True:
+                contents = sourceFile.read(BLOCKSIZE)
+                if not contents:
+                      break
+                targetFile.write(contents)
+
+    #f4.write(f5.read())
+    #f4.close()
+    #f5.close()
+    f44 = open("AES.txt", 'a') 
+    f44.write("\nFortnite 19.01	0xDAE1418B289573D4148C72F3C76ABC7E2DB9CAA618A3EAF2D8580EB3A1BB7A63")
+    f44.close()
+
+    print("Successfully updated!")
+else:
+    print("Nothing new")
+
+#END
