@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
-import linecache
 import datetime
 import random
+import re
+
 TOKEN = ""
 
 bot = commands.Bot(command_prefix=('!'))
@@ -14,48 +15,60 @@ async def on_ready():
 
 @bot.command()
 async def aes(ctx, *, arg):
-    with open('NAMES.txt', 'rt') as file:   
-        for index, line in enumerate(file):
-            if arg.lower() in line.lower():
-                #print(index)
-                #await ctx.send(line)
-                SAS = linecache.getline('KEYS.txt', index+1)
-                SOS = linecache.getline('FULL.txt', index+1)
-                embedVar = discord.Embed(color=0x6699CC)
-                embedVar.add_field(name="Game:", value=SOS, inline=False)
-                embedVar.add_field(name="AES key:", value="`"+SAS+"`", inline=False)
-                await ctx.send(embed=embedVar)
+    if len(arg.replace(" ", "")) < 3 :
+        embedVar = discord.Embed(color=0x669999)
+        embedVar.add_field(name="Nope!", value="Request will be executed with 3+ characters only", inline=False)
+        await ctx.send(embed=embedVar)
+    else:
+        with open('AES.txt', 'rt') as file:   
+            for index, line in enumerate(file):
+                search = re.sub("[:|']","",arg)
+                lst = line.split()
+                loh = lst[:-1]
+                strings = " "
+                jopa = strings.join(loh)
+                #print (jopa)
+                where = re.sub("[:|']","",jopa)
+                
+                if str(search.lower()) in str(where.lower()):
+                    lst = line.split()
+                    loh = lst[:-1]
+                    stringos = " "
+                    embedVar = discord.Embed(color=0x6699CC)
+                    embedVar.add_field(name="Game:", value=stringos.join(loh), inline=False)
+                    embedVar.add_field(name="AES key:", value="`"+lst[-1]+"`", inline=False)
+                    await ctx.send(embed=embedVar)
 
 @bot.command()
 async def link(ctx):    
     embedVar = discord.Embed(color=0x666699)
     embedVar.description = "Wow! Is that an **[invite link](https://discord.com/oauth2/authorize?client_id=924010993984622632&scope=applications.commands%20bot&permissions=8)**???"
     await ctx.send(embed=embedVar)
-    
+
+@bot.command()
+async def data(ctx):   
+   await ctx.send(file=discord.File(r'AES.txt'))
+
 @bot.command()
 async def h(ctx):
     embedVar = discord.Embed(title="Help?", color=0x996699)
     embedVar.add_field(name="!aes", value="Search AES key in database by game name. \n`!aes little nightmares 2`", inline=False)
     embedVar.add_field(name="!status ", value="Database status", inline=False)
     embedVar.add_field(name="!link", value="Bot invite link", inline=False)
-    embedVar.add_field(name="!data", value="Sends AES database in XLS", inline=False)
+    embedVar.add_field(name="!data", value="Sends AES database", inline=False)
     embedVar.add_field(name="!r", value="Message to the creator. \nPlease, technical reports only. \n (new AES keys, AES not working etc)", inline=False)
     embedVar.add_field(name="!git", value="Get bot sources (github link)", inline=False)
     await ctx.send(embed=embedVar)
 
 @bot.command()
-async def restart(ctx):
-    await ctx.send("nah")
-
-@bot.command()
 async def status(ctx):
     lines = 0
-    for line in open('KEYS.txt'):
+    sosi = open('AES.txt', "r")
+    for line in sosi:
         lines += 1
     embedVar = discord.Embed(title="Total database size", color=0x99CC99)
-    embedVar.add_field(name="Games: ", value=lines, inline=True)
     embedVar.add_field(name="Keys: ", value=lines, inline=True)
-    embedVar.set_footer(text='Version [Beta 2.4]')
+    embedVar.set_footer(text='Version [Beta 4]')
     await ctx.send(embed=embedVar)
 
 @bot.command()
@@ -70,14 +83,14 @@ async def pa(ctx, chat, IDEW, *, answer):
         if ctx.author.id == 393833273488441345:  #393833273488441345 is my user ID
             user = await bot.fetch_user(user_id=chat)
             await user.send("> Your report **[" + str(IDEW) + "]** has been answered\n\n" + str(answer))  
-        #else:
-       # await ctx.send("nah")
+            await ctx.send("Reply has been sent!")
 
 @bot.command()
 async def ca(ctx, channel: discord.TextChannel, REPORTS, *, text):
     if ctx.author.id == 393833273488441345:  #393833273488441345 is my user ID
         emb= discord.Embed(title='Report ' + str(REPORTS) + " answered",description=f'{text}', timestamp=ctx.message.created_at, color=0xCC3300)
         await channel.send(embed=emb)
+        await ctx.send("Reply has been sent!")
 
 @bot.command()
 async def r(ctx, *, arg):
@@ -99,16 +112,17 @@ async def r(ctx, *, arg):
     await msg.edit(embed=load4)
     print(fullreport)
     print('"' + arg + '"')
+    
     user = await bot.fetch_user(user_id=393833273488441345)
     complete.add_field(name="User", value=namos, inline=True)
     complete.add_field(name="Time", value=datetimeString, inline=True)
     complete.add_field(name="Message: ", value=textxs, inline=False)
     complete.set_footer(text="ID_" + str(IDs) + "")
-    await user.send('__**!!!NEW REPORT!!!**__\n > **User:**   `' + namos + 
+    await user.send('__**!!!NEW REPORT!!!**__\n> **User:**   `' + namos + 
     "`\n> **Time:**  `"+ datetimeString + 
     "`\n\n> CHAT ID:       `" + str(sos) + 
     "`\n> USER ID:        `" + str(ses) + "`" + 
     "\n> REPORT ID:   `" + str(IDs) + "`\n\n" + textxs)
     await msg.edit(embed=complete)
-    
+
 bot.run(TOKEN)
