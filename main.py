@@ -11,9 +11,10 @@ import time
 import codecs
 import filecmp
 
-TOKEN = "TOKEN!!!"
-
-bot = commands.Bot(command_prefix=('!'))
+TOKEN = "ТОКЕН!!!!"
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix=('!'), intents=intents)
 bot.remove_command( 'help' )
 
 @bot.event
@@ -161,8 +162,8 @@ async def update(ctx):
         await ctx.send("waiting...")
         print("waiting...")
         time.sleep(5)
-        driver.find_element_by_xpath("/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[3]/div[1]/input").click()
-        test_string = driver.find_element_by_xpath("/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[3]/div[2]/div/div/div[2]/div/ol").text
+        driver.find_element("xpath", "/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[3]/div[1]/input").click()
+        test_string = driver.find_element("xpath", "/html/body/table/tbody/tr/td/div[2]/div[2]/table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/div[1]/div[3]/div[2]/div/div/div[2]/div/ol").text
         f1 = open("text1.txt", 'w') 
         f1.write(test_string)
         driver.close()
